@@ -7,7 +7,7 @@ pip install sinegy-python
 ````
 
 ## Generating API credentials
-Go to [INSERT LINK HERE] to generate API credentials.
+Go to [https://marketplace.sinegy.com/user/profile](https://marketplace.sinegy.com/user/profile) to generate API credentials.
 
 ## Official Sinegy API Documentation
 Link to Sinegy's API documentation page is [https://docs.sinegy.com](https://docs.sinegy.com)
