@@ -5,7 +5,7 @@ with open('README.md', 'r', encoding = 'utf-8') as fh:
 
 setup(
     name = 'sinegy-python',
-    version = '0.1',
+    version = '0.2',
     author = 'James Ong Rui Ming',
     author_email = 'jamesong054@gmail.com',
     description = 'Python library for connecting to the Sinegy API.',
