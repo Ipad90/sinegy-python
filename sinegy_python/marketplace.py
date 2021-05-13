@@ -7,36 +7,13 @@ class Marketplace(Base):
     def __init__(self, api_key, secret_key):
         Base.__init__(self, api_key, secret_key)
         self.version = '/api/v1'
-        self.base = 'http://54.169.183.250'
+        self.base = ' https://api.sinegy.com'
 
     def get_currencies(self) -> Dict[str, any]:
         return Base.send(self, 'GET', f'{self.version}/general/currency', None)
 
     def get_currency_pairings(self) -> Dict[str, any]:
         return Base.send(self, 'GET', f'{self.version}/general/currency-pair', None)
-
-    def get_countries(self, country_code: str = 'MYS', page: int = 1, limit: int = 250) -> Dict[str, any]:
-        url = f'{self.version}/general/countries'
-        path = {
-            'countryCode': country_code,
-            'page': page,
-            'limit': limit
-        }
-        url += '?' + urllib.parse.urlencode(path)
-        return Base.send(self, 'GET', url, None)
-
-    def get_states(self, country_code: str, page: int = 1, limit: int = 250) -> Dict[str, any]:
-        url = f'{self.version}/general/states'
-        path = {
-            'countryCode': country_code,
-            'page': page,
-            'limit': limit
-        }
-        url += '?' + urllib.parse.urlencode(path)
-        return Base.send(self, 'GET', url, None)
-
-    def get_company_bank_accounts(self) -> Dict[str, any]:
-        return Base.send(self, 'GET', f'{self.version}/general/sinegy/funding-account', None)
 
     def get_server_status(self) -> Dict[str, any]:
         return Base.send(self, 'GET', f'{self.version}/server/status', None)
@@ -81,35 +58,6 @@ class Marketplace(Base):
         url += '?' + urllib.parse.urlencode(path)
         return Base.send(self, 'GET', url, None)
 
-    def get_funding_fees(self, currency: str) -> Dict[str, any]:
-        url = f'{self.version}/general/funding/fees?'
-        path = {
-            'currency': currency
-        }
-        url += urllib.parse.urlencode(path)
-        return Base.send(self, 'GET', url, None)
-
-    def get_funding_status(self) -> Dict[str, any]:
-        return Base.send(self, 'GET', f'{self.version}/general/funding/status', None)
-
-    def get_funding_types(self) -> Dict[str, any]:
-        return Base.send(self, 'GET', f'{self.version}/general/funding/types', None)
-
-    def get_funding_transfer_types(self) -> Dict[str, any]:
-        return Base.send(self, 'GET', f'{self.version}/general/funding/transfer-types', None)
-
-    def get_funding_payment_types(self) -> Dict[str, any]:
-        return Base.send(self, 'GET', f'{self.version}/general/funding/payment-types', None)
-
-    def get_account_information(self, recv_window: int = 5000) -> Dict[str, any]:
-        url = f'{self.version}/account/user'
-        path = {
-            'recvWindow': recv_window
-        }
-        path['signature'] = Base.signature(self, 'GET', url, path)
-        url += '?' + urllib.parse.urlencode(path)
-        return Base.send(self, 'GET', url, None)
-
     def get_account_balance(self, currency: str = None, recv_window: int = 5000) -> Dict[str, any]:
         url = f'{self.version}/account/balance'
         path = {
@@ -138,7 +86,7 @@ class Marketplace(Base):
         return Base.send(self, 'GET', url, None)
 
     def get_deposits(self, currency: str, page: int = 1, limit: int = 250, start_time: int = 0, end_time: int = 0, recv_window: int = 5000) -> Dict[str, any]:
-        url = f'{self.version}/account/wallet/deposit'
+        url = f'{self.version}/account/wallet/deposit/asset'
         path = {
             'currency': currency,
             'page': page,
@@ -154,7 +102,7 @@ class Marketplace(Base):
         return Base.send(self, 'GET', url, None)
 
     def get_withdrawals(self, currency: str, page: int = 1, limit: int = 250, start_time: int = 0, end_time: int = 0, recv_window: int = 5000) -> Dict[str, any]:
-        url = f'{self.version}/account/wallet/withdrawal'
+        url = f'{self.version}/account/wallet/withdrawal/asset'
         path = {
             'currency': currency,
             'page': page,
@@ -170,21 +118,13 @@ class Marketplace(Base):
         return Base.send(self, 'GET', url, None)
 
     def get_trade_fees(self, pair: str) -> Dict[str, any]:
-        url = f'{self.version}/general/trade/fees?'
+        url = f'{self.version}/general/trade/fees'
         path = {
             'currencyPair': pair
         }
         url += '?' + urllib.parse.urlencode(path)
         return Base.send(self, 'GET', url, None)
-        
-    def get_order_message_types(self, pair: str) -> Dict[str, any]:
-        url = f'{self.version}/general/order/message-types'
-        path = {
-            'currencyPair': pair
-        }
-        url += '?' + urllib.parse.urlencode(path)
-        return Base.send(self, 'GET', url, None)
-        
+
     def get_order_status(self, pair: str) -> Dict[str, any]:
         url = f'{self.version}/general/order/status'
         path = {
@@ -229,7 +169,7 @@ class Marketplace(Base):
         url = f'{self.version}/account/orders/check'
         path = {
             'currencyPair': pair,
-            'transactioNo': transaction_no,
+            'transactionNo': transaction_no,
             'recvWindow': recv_window
         }
         path['signature'] = Base.signature(self, 'GET', url, path)
@@ -268,7 +208,6 @@ class Marketplace(Base):
         url = f'{self.version}/account/trades'
         path = {
             'currencyPair': pair,
-            'transactioNo': transaction_no,
             'recvWindow': recv_window
         }
         if start_time > 0:
@@ -279,8 +218,8 @@ class Marketplace(Base):
         url += '?' + urllib.parse.urlencode(path)
         return Base.send(self, 'GET', url, None)
 
-    def place_order(self, pair: str, price: float, volume: float, side: int, order_type: int, time_inforce: int, recv_window: int = 5000) -> Dict[str, any]:
-        url = f'{self.version}/account/orders/place'
+    def place_test_order(self, pair: str, price: float, volume: float, side: int, order_type: int, time_inforce: int, recv_window: int = 5000) -> Dict[str, any]:
+        url = f'{self.version}/account/orders/test'
         parameters = {
             'currencyPair': pair,
             'unitPrice': price,
@@ -293,8 +232,8 @@ class Marketplace(Base):
         parameters['signature'] = Base.signature(self, 'POST', url, parameters)
         return Base.send(self, 'POST', url, parameters)
 
-    def place_test_order(self, pair: str, price: float, volume: float, side: int, order_type: int, time_inforce: int, recv_window: int = 5000) -> Dict[str, any]:
-        url = f'{self.version}/account/orders/test'
+    def place_order(self, pair: str, price: float, volume: float, side: int, order_type: int, time_inforce: int, recv_window: int = 5000) -> Dict[str, any]:
+        url = f'{self.version}/account/orders/place'
         parameters = {
             'currencyPair': pair,
             'unitPrice': price,
