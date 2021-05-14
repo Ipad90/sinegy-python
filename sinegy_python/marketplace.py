@@ -125,46 +125,6 @@ class Marketplace(Base):
         url += '?' + urllib.parse.urlencode(path)
         return Base.send(self, 'GET', url, None)
 
-    def get_order_status(self, pair: str) -> Dict[str, any]:
-        url = f'{self.version}/general/order/status'
-        path = {
-            'currencyPair': pair
-        }
-        url += '?' + urllib.parse.urlencode(path)
-        return Base.send(self, 'GET', url, None)
-        
-    def get_order_types(self, pair: str) -> Dict[str, any]:
-        url = f'{self.version}/general/order/types'
-        path = {
-            'currencyPair': pair
-        }
-        url += '?' + urllib.parse.urlencode(path)
-        return Base.send(self, 'GET', url, None)
-        
-    def get_order_time_inforce(self, pair: str) -> Dict[str, any]:
-        url = f'{self.version}/general/order/time-inforce'
-        path = {
-            'currencyPair': pair
-        }
-        url += '?' + urllib.parse.urlencode(path)
-        return Base.send(self, 'GET', url, None)
-        
-    def get_order_sides(self, pair: str) -> Dict[str, any]:
-        url = f'{self.version}/general/order/sides'
-        path = {
-            'currencyPair': pair
-        }
-        url += '?' + urllib.parse.urlencode(path)
-        return Base.send(self, 'GET', url, None)
-        
-    def get_order_flags(self, pair: str) -> Dict[str, any]:
-        url = f'{self.version}/general/order/flags'
-        path = {
-            'currencyPair': pair
-        }
-        url += '?' + urllib.parse.urlencode(path)
-        return Base.send(self, 'GET', url, None)
-        
     def get_specific_order(self, pair: str, transaction_no: str, recv_window: int = 5000) -> Dict[str, any]:
         url = f'{self.version}/account/orders/check'
         path = {
@@ -218,29 +178,27 @@ class Marketplace(Base):
         url += '?' + urllib.parse.urlencode(path)
         return Base.send(self, 'GET', url, None)
 
-    def place_test_order(self, pair: str, price: float, volume: float, side: int, order_type: int, time_inforce: int, recv_window: int = 5000) -> Dict[str, any]:
+    def place_test_order(self, pair: str, price: float, volume: float, side: str, order_type: str, recv_window: int = 5000) -> Dict[str, any]:
         url = f'{self.version}/account/orders/test'
         parameters = {
             'currencyPair': pair,
             'unitPrice': price,
             'volume': volume,
-            'orderSideId': side,
-            'orderTypeId': order_type,
-            'timeInForce': time_inforce,
+            'orderSide': side,
+            'orderType': order_type,
             'recvWindow': recv_window
         }
         parameters['signature'] = Base.signature(self, 'POST', url, parameters)
         return Base.send(self, 'POST', url, parameters)
 
-    def place_order(self, pair: str, price: float, volume: float, side: int, order_type: int, time_inforce: int, recv_window: int = 5000) -> Dict[str, any]:
+    def place_order(self, pair: str, price: float, volume: float, side: str, order_type: str, recv_window: int = 5000) -> Dict[str, any]:
         url = f'{self.version}/account/orders/place'
         parameters = {
             'currencyPair': pair,
             'unitPrice': price,
             'volume': volume,
-            'orderSideId': side,
-            'orderTypeId': order_type,
-            'timeInForce': time_inforce,
+            'orderSide': side,
+            'orderType': order_type,
             'recvWindow': recv_window
         }
         parameters['signature'] = Base.signature(self, 'POST', url, parameters)
