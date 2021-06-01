@@ -30,7 +30,7 @@ print('----- GET TRADES -----')
 print(sinegy.get_trades('ethmyr'))
 
 print('----- PLACE TEST ORDER -----')
-print(sinegy.place_test_order('ethmyr', 20000, 0.01, 1, 2, 1))
+print(sinegy.place_test_order('ethmyr', 20000, 0.01, 'buy', 'limit'))
 
 print('----- CANCEL ORDER -----')
 print(sinegy.cancel_order('ethmyr', '420'))
